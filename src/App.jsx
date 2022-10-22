@@ -1,34 +1,48 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import './App.css'
+import { Component } from 'react'
+import CardList from './components/card-list/card-list.component'
+class App extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      monsters: [],
+      searchField: ''
+    }
+  }
 
-function App() {
-  const [count, setCount] = useState(0)
+  componentDidMount() {
+    fetch('https://jsonplaceholder.typicode.com/users')
+      .then(response => response.json())
+      .then(users => this.setState(
+        () => ({ monsters: users }),
+        () => console.log(this.state)
+      ))
+  }
+  onChangeSearchMonster = (event) => {
+    console.log(event.target.value)
+    this.setState({ searchField: event.target.value.toLocaleLowerCase() })
+  }
 
-  return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+  render() {
+    const { monsters, searchField } = this.state
+    const filteredMonsters = monsters.filter(
+      monster => monster.name.toLowerCase().includes(searchField.toLowerCase()))
+    return (
+      <div className="App">
+        <input
+          className='search-box'
+          type="search" placeholder='Search Monsters'
+          onChange={this.onChangeSearchMonster}
+        />
+        {/*{
+          filteredMonsters.map(monster => <h1 key={monster.id}>{monster.name}</h1>)
+        }*/}
+        <CardList monsters={filteredMonsters} />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
-  )
+    )
+  }
 }
 
 export default App
