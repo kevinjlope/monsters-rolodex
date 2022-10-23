@@ -1,8 +1,7 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
 import './App.css'
 import { Component } from 'react'
 import CardList from './components/card-list/card-list.component'
+import SearchBox from './components/search-box/search-box.component'
 class App extends Component {
   constructor(props) {
     super(props)
@@ -31,14 +30,12 @@ class App extends Component {
       monster => monster.name.toLowerCase().includes(searchField.toLowerCase()))
     return (
       <div className="App">
-        <input
+        <h1 className='app-title'>Monsters Rolodex</h1>
+        <SearchBox
           className='search-box'
-          type="search" placeholder='Search Monsters'
-          onChange={this.onChangeSearchMonster}
+          placeholder='Search Monsters'
+          onChangeHandler={this.onChangeSearchMonster}
         />
-        {/*{
-          filteredMonsters.map(monster => <h1 key={monster.id}>{monster.name}</h1>)
-        }*/}
         <CardList monsters={filteredMonsters} />
       </div>
     )
